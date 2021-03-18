@@ -1,22 +1,29 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  KeyboardAvoidingView,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { RichEditor } from "react-native-pell-rich-editor";
 import Container from "./CustomRich/src/Container";
 
-/*
- */
-
 export default function App() {
   const [custom, setCustom] = useState(true);
+  const [focus, setFocus] = useState(true);
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Text>{custom ? "Custom" : "Old"}</Text>
-      <Button
-        onPress={() => setCustom((c) => !c)}
-        title={custom ? "Set to old" : "Set to custom"}
-      />
+    <KeyboardAvoidingView style={styles.container}>
+      <Pressable>
+        <StatusBar style="auto" />
+        <Text>{custom ? "Custom" : "Old"}</Text>
+        <Button
+          onPress={() => setCustom((c) => !c)}
+          title={custom ? "Set to old" : "Set to custom"}
+        />
+      </Pressable>
       <View
         style={{
           marginTop: 40,
@@ -27,15 +34,20 @@ export default function App() {
       >
         <View style={{ height: 75 }} />
         {custom ? (
-          <Container />
+          <Container
+            focus={focus}
+            setFocus={setFocus}
+            placeholder={"custom testing..."}
+          />
         ) : (
           <RichEditor
+            autoCapitalize={"on"}
             editorStyle={{ backgroundColor: "white", color: "black" }}
             placeholder="testing"
           />
         )}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

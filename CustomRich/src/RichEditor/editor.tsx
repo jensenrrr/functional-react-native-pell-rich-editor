@@ -53,7 +53,7 @@ function createHTML(options: inthtmlProps) {
     pasteListener = false,
     keyDownListener = false,
     keyUpListener = false,
-    autoCapitalize = "off",
+    autoCapitalize = "on",
     defaultParagraphSeparator = "div",
     // When first gaining focus, the cursor moves to the end of the text
     firstFocusEnd = true,
