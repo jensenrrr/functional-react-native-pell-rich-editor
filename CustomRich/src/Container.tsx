@@ -96,7 +96,8 @@ const Container: React.FC<IContainer> = ({
         break;
       }
       case messages.OFFSET_HEIGHT:
-        setHeight(message.data);
+        console.log(message.data);
+        setHeight(Math.min(220, message.data));
         break;
       default:
         console.log("default message", message.data);
@@ -106,37 +107,36 @@ const Container: React.FC<IContainer> = ({
 
   const blurEditor = () => {
     sendAction(actions.content, "blur");
-    setInternalFocus(false);
+    setFocus(false);
   };
   const focusEditor = () => {
     sendAction(actions.content, "focus");
-    setFocus(true);
     setInternalFocus(true);
+    setFocus(true);
   };
 
   useEffect(() => {
-    if (focus !== internalFocus) {
-      if (focus) focusEditor();
-      else blurEditor();
-    }
-  }, [focus, internalFocus]);
+    if (focus) focusEditor();
+    else blurEditor();
+  }, [focus]);
 
   return (
     <>
       <View style={{ height: height }}>
         <WebView
           ref={webView}
-          scrollEnabled={false}
+          scrollEnabled={height > 80}
+          showsVerticalScrollIndicator={height > 80}
+          bounces={true}
           hideKeyboardAccessoryView={true}
           keyboardDisplayRequiresUserAction={false}
           originWhitelist={["*"]}
           dataDetectorTypes={"none"}
           domStorageEnabled={false}
-          bounces={false}
-          javaScriptEnabled={true}
           onMessage={onMessage}
           source={{ html }}
           onLoad={init}
+          //android -> overscroll mode?
         />
       </View>
       {focus ? (
