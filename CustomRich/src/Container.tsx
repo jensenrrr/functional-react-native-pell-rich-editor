@@ -1,5 +1,5 @@
-import React from "react";
-import { View } from "react-native";
+import React, { useEffect } from "react";
+import { Button, View } from "react-native";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { actions, messages } from "./const";
 import { IContainer } from "./IContainer";
@@ -32,23 +32,27 @@ const Container: React.FC<IContainer> = ({
 }) => {
   const html = createHTML({ color: "black" });
   const webView = React.useRef<WebView>(null);
+  const [internalFocus, setInternalFocus] = React.useState(false);
   const [
     selectionChangeListeners,
     setSelectionChangeListeners,
   ] = React.useState<SelectionChangeListener[]>([]);
+  const [height, setHeight] = React.useState(50);
 
-  const sendAction = (action: string) => {
+  const sendAction = (
+    type: any,
+    action?: string,
+    data?: any,
+    options?: any
+  ) => {
     if (webView && webView.current) {
-      console.log("action", action);
-      webView.current.postMessage(action);
+      webView.current.postMessage(actionFormatter(type, action, data, options));
     }
   };
 
   const init = () => {
     if (placeholder) {
-      sendAction(
-        actionFormatter(actions.content, "setPlaceholder", placeholder)
-      );
+      sendAction(actions.content, "setPlaceholder", placeholder);
     }
   };
 
@@ -80,11 +84,11 @@ const Container: React.FC<IContainer> = ({
         break;
       }
       case messages.CONTENT_FOCUSED: {
-        setFocus(true);
+        focusEditor();
         break;
       }
       case messages.CONTENT_BLUR: {
-        setFocus(false);
+        blurEditor();
         break;
       }
       case messages.CONTENT_CHANGE: {
@@ -105,35 +109,63 @@ const Container: React.FC<IContainer> = ({
       }
       case messages.OFFSET_HEIGHT:
         console.log("offset height unhandled");
+        setHeight(message.data);
         /*
         if (props.useContainer) setHeight(message.data);
         if (props.onHeightChange) props.onHeightChange(height);
         */
         break;
       default:
-        console.log("default message");
+        console.log("default message", message.data);
         //onMessage && onMessage(message);
         break;
     }
   };
 
+  const blurEditor = () => {
+    sendAction(actions.content, "blur");
+    setInternalFocus(false);
+  };
+  const focusEditor = () => {
+    sendAction(actions.content, "focus");
+    setFocus(true);
+    setInternalFocus(true);
+  };
+
+  useEffect(() => {
+    if (focus !== internalFocus) {
+      if (focus) focusEditor();
+      else blurEditor();
+    }
+  }, [focus, internalFocus]);
+
   return (
-    <View style={{ height: 50 }}>
-      <WebView
-        ref={webView}
-        scrollEnabled={false}
-        hideKeyboardAccessoryView={true}
-        keyboardDisplayRequiresUserAction={false}
-        originWhitelist={["*"]}
-        dataDetectorTypes={"none"}
-        domStorageEnabled={false}
-        bounces={false}
-        javaScriptEnabled={true}
-        onMessage={onMessage}
-        source={{ html }}
-        onLoad={init}
-      />
-    </View>
+    <>
+      <View style={{ height: height }}>
+        <WebView
+          ref={webView}
+          scrollEnabled={false}
+          hideKeyboardAccessoryView={true}
+          keyboardDisplayRequiresUserAction={false}
+          originWhitelist={["*"]}
+          dataDetectorTypes={"none"}
+          domStorageEnabled={false}
+          bounces={false}
+          javaScriptEnabled={true}
+          onMessage={onMessage}
+          source={{ html }}
+          onLoad={init}
+        />
+      </View>
+      {focus ? (
+        <View style={{ backgroundColor: "#C7C7C7", height: 40 }}>
+          <Button
+            onPress={() => sendAction(actions.setBold, "result")}
+            title="Bold"
+          />
+        </View>
+      ) : null}
+    </>
   );
 };
 

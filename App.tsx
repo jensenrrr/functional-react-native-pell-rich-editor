@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   Button,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -13,26 +14,40 @@ import Container from "./CustomRich/src/Container";
 
 export default function App() {
   const [custom, setCustom] = useState(true);
-  const [focus, setFocus] = useState(true);
+  const [focus, setFocus] = useState(false);
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <Pressable>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <Pressable
+        style={{
+          height: 200,
+          width: 200,
+          marginBottom: 100,
+          backgroundColor: "#FFF0FD",
+        }}
+        onPress={() => {
+          setFocus(false);
+        }}
+      >
         <StatusBar style="auto" />
         <Text>{custom ? "Custom" : "Old"}</Text>
         <Button
-          onPress={() => setCustom((c) => !c)}
+          onPress={(e) => {
+            e.preventDefault();
+            setCustom((c) => !c);
+          }}
           title={custom ? "Set to old" : "Set to custom"}
         />
       </Pressable>
       <View
         style={{
-          marginTop: 40,
+          backgroundColor: "#C7C7C7",
+          paddingBottom: focus ? 0 : 10,
           width: "100%",
-          height: 200,
-          backgroundColor: "gray",
         }}
       >
-        <View style={{ height: 75 }} />
         {custom ? (
           <Container
             focus={focus}
@@ -54,8 +69,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#DADADA",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
   },
 });

@@ -58,7 +58,6 @@ function createHTML(options: inthtmlProps) {
     // When first gaining focus, the cursor moves to the end of the text
     firstFocusEnd = true,
   } = options;
-  console.log(backgroundColor);
   //ERROR: HTML height not 100%;
   return `
 <!DOCTYPE html>
@@ -541,6 +540,7 @@ function createHTML(options: inthtmlProps) {
                 clearTimeout(_handleCTime);
                 _handleCTime = setTimeout(function(){
                     var html = Actions.content.getHtml();
+                    Actions.UPDATE_HEIGHT();
                     postAction({type: 'CONTENT_CHANGE', data: html});
                 }, 50);
             }
