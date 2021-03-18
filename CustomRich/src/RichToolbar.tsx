@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Button } from "react-native";
-import { actions } from "react-native-pell-rich-editor";
+import { actions } from "./const";
 import { SelectionChangeListener } from "./IContainer";
 
 interface IRichToolbar {
@@ -23,15 +23,8 @@ const RichToolbar: React.FC<IRichToolbar> = ({
 
   const toolbarSelectHandler = (items: string[]) => {
     if (items !== selectedItems) {
+      //is something not handled here? the pell editor has more logic
       setSelectedItems(items);
-      /*
-      this.setState({
-        items,
-        data: this.state.actions.map((action) => ({
-          action,
-          selected: items.includes(action),
-        })),
-      });*/
     }
   };
 
@@ -43,11 +36,22 @@ const RichToolbar: React.FC<IRichToolbar> = ({
   }, []);
 
   return (
-    <View style={{ backgroundColor: "#C7C7C7", height: 40 }}>
-      <Button
-        onPress={() => sendAction(actions.setBold, "result")}
-        title="Bold"
-      />
+    <View
+      style={{
+        backgroundColor: "#C7C7C7",
+        height: 40,
+      }}
+    >
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        <Button
+          onPress={() => sendAction(actions.setBold, "result")}
+          title="Bold"
+        />
+        <Button
+          onPress={() => sendAction(actions.setItalic, "result")}
+          title="Italic"
+        />
+      </View>
     </View>
   );
 };

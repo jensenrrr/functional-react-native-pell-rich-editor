@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { actions, messages } from "./const";
 import { IContainer, SelectionChangeListener } from "./IContainer";
-import { createHTML } from "./RichEditor/editor";
+import { createHTML } from "./editor";
 import RichToolbar from "./RichToolbar";
 
 const actionFormatter = (
@@ -60,17 +60,6 @@ const Container: React.FC<IContainer> = ({
     switch (message.type) {
       case messages.CONTENT_HTML_RESPONSE:
         console.log("Content html response", message);
-        /*
-                    if (this.contentResolve) {
-                        this.contentResolve(message.data);
-                        this.contentResolve = undefined;
-                        this.contentReject = undefined;
-                        if (this.pendingContentHtml) {
-                            clearTimeout(this.pendingContentHtml);
-                            this.pendingContentHtml = undefined;
-                        }
-                    }
-                    */
         break;
       case messages.LOG:
         console.log("FROM EDIT:", ...message.data);
@@ -107,16 +96,10 @@ const Container: React.FC<IContainer> = ({
         break;
       }
       case messages.OFFSET_HEIGHT:
-        console.log("offset height unhandled");
         setHeight(message.data);
-        /*
-        if (props.useContainer) setHeight(message.data);
-        if (props.onHeightChange) props.onHeightChange(height);
-        */
         break;
       default:
         console.log("default message", message.data);
-        //onMessage && onMessage(message);
         break;
     }
   };
