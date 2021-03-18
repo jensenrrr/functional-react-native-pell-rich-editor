@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleProp, ViewStyle } from "react-native";
 
+export type SelectionChangeListener = (items: string[]) => void;
 export interface IContainer {
   focus: boolean;
   setFocus: React.Dispatch<React.SetStateAction<boolean>>;

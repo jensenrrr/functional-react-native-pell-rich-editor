@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { Button, View } from "react-native";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { actions, messages } from "./const";
-import { IContainer } from "./IContainer";
+import { IContainer, SelectionChangeListener } from "./IContainer";
 import { createHTML } from "./RichEditor/editor";
+import RichToolbar from "./RichToolbar";
 
 const actionFormatter = (
   type: any,
@@ -18,8 +19,6 @@ const actionFormatter = (
     options: options,
   });
 };
-
-type SelectionChangeListener = (items: string[]) => void;
 
 const Container: React.FC<IContainer> = ({
   focus,
@@ -158,12 +157,10 @@ const Container: React.FC<IContainer> = ({
         />
       </View>
       {focus ? (
-        <View style={{ backgroundColor: "#C7C7C7", height: 40 }}>
-          <Button
-            onPress={() => sendAction(actions.setBold, "result")}
-            title="Bold"
-          />
-        </View>
+        <RichToolbar
+          setSelectionChangeListeners={setSelectionChangeListeners}
+          sendAction={sendAction}
+        />
       ) : null}
     </>
   );
