@@ -3,7 +3,9 @@ import { View } from "react-native";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { actions, messages } from "./const";
 import {
-  IContainer,
+  IMessenger,
+  IMessengerAction,
+  ISendAction,
   RichToolbarOption,
   SelectionChangeListener,
   SendAction,
@@ -12,38 +14,24 @@ import { createHTML } from "./editor";
 import RichToolbar from "./RichToolbar";
 import { BoldIcon, ItalicIcon, UnderlineIcon } from "./Icons/RichOptions";
 
-const actionFormatter = (
-  type: any,
-  action?: string,
-  data?: any,
-  options?: any
-) => {
-  return JSON.stringify({
-    type,
-    name: action,
-    data: data,
-    options: options,
-  });
-};
-
-const intializeToolbarOptions = (sendAction: SendAction) => {
+const intializeToolbarOptions = () => {
   const results: RichToolbarOption[] = [];
   results.push({
     icon: BoldIcon,
-    action: () => sendAction(actions.setBold, "result"),
+    action: { type: actions.setBold, name: "result" },
   });
   results.push({
     icon: ItalicIcon,
-    action: () => sendAction(actions.setItalic, "result"),
+    action: { type: actions.setItalic, name: "result" },
   });
   results.push({
     icon: UnderlineIcon,
-    action: () => sendAction(actions.setUnderline, "result"),
+    action: { type: actions.setUnderline, name: "result" },
   });
   return results;
 };
 
-const Container: React.FC<IContainer> = ({
+const Messenger: React.FC<IMessenger> = ({
   focus,
   setFocus,
   placeholder,
@@ -60,18 +48,23 @@ const Container: React.FC<IContainer> = ({
   ] = React.useState<SelectionChangeListener[]>([]);
   const [height, setHeight] = React.useState(50);
 
-  const sendAction: SendAction = (type, action, data, options) => {
+  const sendAction: ISendAction = (action) => {
     if (webView && webView.current) {
-      webView.current.postMessage(actionFormatter(type, action, data, options));
+      webView.current.postMessage(JSON.stringify(action));
     }
   };
+
   const [toolbarOptions, setToolbarOptions] = React.useState<
     RichToolbarOption[]
-  >(intializeToolbarOptions(sendAction));
+  >(intializeToolbarOptions());
 
   const init = () => {
     if (placeholder) {
-      sendAction(actions.content, "setPlaceholder", placeholder);
+      sendAction({
+        type: actions.content,
+        name: "setPlaceholder",
+        data: placeholder,
+      });
     }
   };
 
@@ -126,11 +119,11 @@ const Container: React.FC<IContainer> = ({
   };
 
   const blurEditor = () => {
-    sendAction(actions.content, "blur");
+    sendAction({ type: actions.content, name: "blur" });
     setFocus(false);
   };
   const focusEditor = () => {
-    sendAction(actions.content, "focus");
+    sendAction({ type: actions.content, name: "focus" });
     setFocus(true);
   };
 
@@ -169,4 +162,4 @@ const Container: React.FC<IContainer> = ({
   );
 };
 
-export default Container;
+export default Messenger;

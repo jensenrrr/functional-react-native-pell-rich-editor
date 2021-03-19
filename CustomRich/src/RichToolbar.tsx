@@ -9,12 +9,12 @@ const RichToolbar: React.FC<IRichToolbar> = ({
   setSelectionChangeListeners,
   options,
 }) => {
-  const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
+  const [selectedText, setSelectedText] = React.useState<string[]>([]);
 
   const toolbarSelectHandler = (items: string[]) => {
-    if (items !== selectedItems) {
+    if (items !== selectedText) {
       //is something not handled here? the pell editor has more logic
-      setSelectedItems(items);
+      setSelectedText(items);
     }
   };
 
@@ -29,7 +29,10 @@ const RichToolbar: React.FC<IRichToolbar> = ({
 
   const renderOption = (item: any) => {
     return (
-      <Pressable style={{ padding: 10 }} onPress={() => item.action()}>
+      <Pressable
+        style={{ padding: 10 }}
+        onPress={() => sendAction(item.action)}
+      >
         {item.icon()}
       </Pressable>
     );

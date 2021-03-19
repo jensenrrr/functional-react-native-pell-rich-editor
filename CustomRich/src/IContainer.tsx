@@ -10,6 +10,14 @@ export type SendAction = (
 
 export type SelectionChangeListener = (items: string[]) => void;
 
+export interface IMessengerAction {
+  type: any;
+  name?: string;
+  data?: any;
+  options?: any;
+}
+
+export type ISendAction = (action: IMessengerAction) => void;
 export interface IRichToolbar {
   options: RichToolbarOption[];
   sendAction: SendAction;
@@ -19,11 +27,12 @@ export interface IRichToolbar {
 }
 export interface RichToolbarOption {
   icon: () => JSX.Element;
-  action: SendAction;
+  action: IMessengerAction;
 }
-export interface IContainer {
+export interface IMessenger {
   focus: boolean;
   setFocus: React.Dispatch<React.SetStateAction<boolean>>;
+  sendMessage?: () => void;
   /**
    * Used for placement of editor
    */
