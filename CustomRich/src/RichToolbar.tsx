@@ -1,23 +1,13 @@
 import React, { useEffect } from "react";
-import { View, Button } from "react-native";
+import { View, Button, FlatList, Pressable } from "react-native";
 import { actions } from "./const";
-import { SelectionChangeListener } from "./IContainer";
-
-interface IRichToolbar {
-  sendAction: (
-    type: any,
-    action?: string | undefined,
-    data?: any,
-    options?: any
-  ) => void;
-  setSelectionChangeListeners: React.Dispatch<
-    React.SetStateAction<SelectionChangeListener[]>
-  >;
-}
+import RichOptions from "./Icons/RichOptions";
+import { IRichToolbar } from "./IContainer";
 
 const RichToolbar: React.FC<IRichToolbar> = ({
   sendAction,
   setSelectionChangeListeners,
+  options,
 }) => {
   const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
 
@@ -33,16 +23,36 @@ const RichToolbar: React.FC<IRichToolbar> = ({
       ...listeners,
       (items) => toolbarSelectHandler(items),
     ]);
+
+    return setSelectionChangeListeners([]);
   }, []);
 
+  const renderOption = (item: any) => {
+    return (
+      <Pressable style={{ padding: 10 }} onPress={() => item.action()}>
+        {item.icon()}
+      </Pressable>
+    );
+  };
+
   return (
-    <View
+    <FlatList
+      horizontal
+      keyboardShouldPersistTaps={"always"}
+      keyExtractor={(item: any, index: number) => index.toString()}
+      data={options}
+      alwaysBounceHorizontal={false}
+      showsHorizontalScrollIndicator={false}
+      renderItem={({ item }) => renderOption(item)}
       style={{
         backgroundColor: "#C7C7C7",
-        height: 40,
       }}
-    >
-      <View style={{ flex: 1, flexDirection: "row" }}>
+      //contentContainerStyle={flatContainerStyle}
+    />
+  );
+};
+
+/*
         <Button
           onPress={() => sendAction(actions.setBold, "result")}
           title="Bold"
@@ -51,9 +61,5 @@ const RichToolbar: React.FC<IRichToolbar> = ({
           onPress={() => sendAction(actions.setItalic, "result")}
           title="Italic"
         />
-      </View>
-    </View>
-  );
-};
-
+*/
 export default RichToolbar;

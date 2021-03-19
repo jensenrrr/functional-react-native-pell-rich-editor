@@ -2,9 +2,15 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { actions, messages } from "./const";
-import { IContainer, SelectionChangeListener } from "./IContainer";
+import {
+  IContainer,
+  RichToolbarOption,
+  SelectionChangeListener,
+  SendAction,
+} from "./IContainer";
 import { createHTML } from "./editor";
 import RichToolbar from "./RichToolbar";
+import { BoldIcon, ItalicIcon, UnderlineIcon } from "./Icons/RichOptions";
 
 const actionFormatter = (
   type: any,
@@ -20,6 +26,23 @@ const actionFormatter = (
   });
 };
 
+const intializeToolbarOptions = (sendAction: SendAction) => {
+  const results: RichToolbarOption[] = [];
+  results.push({
+    icon: BoldIcon,
+    action: () => sendAction(actions.setBold, "result"),
+  });
+  results.push({
+    icon: ItalicIcon,
+    action: () => sendAction(actions.setItalic, "result"),
+  });
+  results.push({
+    icon: UnderlineIcon,
+    action: () => sendAction(actions.setUnderline, "result"),
+  });
+  return results;
+};
+
 const Container: React.FC<IContainer> = ({
   focus,
   setFocus,
@@ -31,23 +54,20 @@ const Container: React.FC<IContainer> = ({
 }) => {
   const html = createHTML({ color: "black" });
   const webView = React.useRef<WebView>(null);
-  const [internalFocus, setInternalFocus] = React.useState(false);
   const [
     selectionChangeListeners,
     setSelectionChangeListeners,
   ] = React.useState<SelectionChangeListener[]>([]);
   const [height, setHeight] = React.useState(50);
 
-  const sendAction = (
-    type: any,
-    action?: string,
-    data?: any,
-    options?: any
-  ) => {
+  const sendAction: SendAction = (type, action, data, options) => {
     if (webView && webView.current) {
       webView.current.postMessage(actionFormatter(type, action, data, options));
     }
   };
+  const [toolbarOptions, setToolbarOptions] = React.useState<
+    RichToolbarOption[]
+  >(intializeToolbarOptions(sendAction));
 
   const init = () => {
     if (placeholder) {
@@ -111,7 +131,6 @@ const Container: React.FC<IContainer> = ({
   };
   const focusEditor = () => {
     sendAction(actions.content, "focus");
-    setInternalFocus(true);
     setFocus(true);
   };
 
@@ -141,6 +160,7 @@ const Container: React.FC<IContainer> = ({
       </View>
       {focus ? (
         <RichToolbar
+          options={toolbarOptions}
           setSelectionChangeListeners={setSelectionChangeListeners}
           sendAction={sendAction}
         />

@@ -44,7 +44,7 @@ export default function App() {
       <View
         style={{
           backgroundColor: "#C7C7C7",
-          paddingBottom: focus ? 0 : 10,
+          paddingBottom: focus ? 0 : 40,
           width: "100%",
         }}
       >

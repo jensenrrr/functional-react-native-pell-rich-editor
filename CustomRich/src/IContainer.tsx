@@ -1,7 +1,26 @@
 import React from "react";
 import { StyleProp, ViewStyle } from "react-native";
 
+export type SendAction = (
+  type: any,
+  action?: string | undefined,
+  data?: any,
+  options?: any
+) => void;
+
 export type SelectionChangeListener = (items: string[]) => void;
+
+export interface IRichToolbar {
+  options: RichToolbarOption[];
+  sendAction: SendAction;
+  setSelectionChangeListeners: React.Dispatch<
+    React.SetStateAction<SelectionChangeListener[]>
+  >;
+}
+export interface RichToolbarOption {
+  icon: () => JSX.Element;
+  action: SendAction;
+}
 export interface IContainer {
   focus: boolean;
   setFocus: React.Dispatch<React.SetStateAction<boolean>>;
