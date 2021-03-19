@@ -16,7 +16,7 @@ const RichToolbar: React.FC<IRichToolbar> = ({
         style={[{ padding: 10 }, selected ? { backgroundColor: "blue" } : {}]}
         onPress={() => sendAction(item.action)}
       >
-        {item.icon()}
+        {item.icon(selected)}
       </Pressable>
     );
   };

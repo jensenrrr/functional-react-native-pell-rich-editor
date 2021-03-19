@@ -18,13 +18,14 @@ export interface IMessengerAction {
 }
 
 export type ISendAction = (action: IMessengerAction) => void;
+
 export interface IRichToolbar {
   options: RichToolbarOption[];
   selectedOptions: string[];
   sendAction: SendAction;
 }
 export interface RichToolbarOption {
-  icon: () => JSX.Element;
+  icon: (selected: boolean) => JSX.Element;
   action: IMessengerAction;
 }
 export interface IMessenger {
