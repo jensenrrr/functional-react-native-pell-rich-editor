@@ -15,19 +15,20 @@ import RichToolbar from "./RichToolbar";
 import { BoldIcon, ItalicIcon, UnderlineIcon } from "./Icons/RichOptions";
 
 const intializeToolbarOptions = () => {
-  const results: RichToolbarOption[] = [];
-  results.push({
-    icon: BoldIcon,
-    action: { type: actions.setBold, name: "result" },
-  });
-  results.push({
-    icon: ItalicIcon,
-    action: { type: actions.setItalic, name: "result" },
-  });
-  results.push({
-    icon: UnderlineIcon,
-    action: { type: actions.setUnderline, name: "result" },
-  });
+  const results: RichToolbarOption[] = [
+    {
+      icon: BoldIcon,
+      action: { type: actions.setBold, name: "result" },
+    },
+    {
+      icon: ItalicIcon,
+      action: { type: actions.setItalic, name: "result" },
+    },
+    {
+      icon: UnderlineIcon,
+      action: { type: actions.setUnderline, name: "result" },
+    },
+  ];
   return results;
 };
 
@@ -42,11 +43,8 @@ const Messenger: React.FC<IMessenger> = ({
 }) => {
   const html = createHTML({ color: "black" });
   const webView = React.useRef<WebView>(null);
-  const [
-    selectionChangeListeners,
-    setSelectionChangeListeners,
-  ] = React.useState<SelectionChangeListener[]>([]);
   const [height, setHeight] = React.useState(50);
+  const [selectedOptions, setSelectedOptions] = React.useState<string[]>([]);
 
   const sendAction: ISendAction = (action) => {
     if (webView && webView.current) {
@@ -79,9 +77,9 @@ const Messenger: React.FC<IMessenger> = ({
         break;
       case messages.SELECTION_CHANGE: {
         const items = message.data;
-        selectionChangeListeners.map((listener) => {
-          listener(items);
-        });
+        //console.log("selection items:", JSON.stringify(items));
+        //console.log("listeners: ", JSON.stringify(selectionChangeListeners));
+        setSelectedOptions(message.data);
         break;
       }
       case messages.CONTENT_FOCUSED: {
@@ -154,7 +152,7 @@ const Messenger: React.FC<IMessenger> = ({
       {focus ? (
         <RichToolbar
           options={toolbarOptions}
-          setSelectionChangeListeners={setSelectionChangeListeners}
+          selectedOptions={selectedOptions}
           sendAction={sendAction}
         />
       ) : null}

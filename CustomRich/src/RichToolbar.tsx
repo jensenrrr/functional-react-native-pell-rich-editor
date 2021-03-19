@@ -2,35 +2,18 @@ import React, { useEffect } from "react";
 import { View, Button, FlatList, Pressable } from "react-native";
 import { actions } from "./const";
 import RichOptions from "./Icons/RichOptions";
-import { IRichToolbar } from "./IContainer";
+import { IRichToolbar, RichToolbarOption } from "./IContainer";
 
 const RichToolbar: React.FC<IRichToolbar> = ({
   sendAction,
-  setSelectionChangeListeners,
   options,
+  selectedOptions,
 }) => {
-  const [selectedText, setSelectedText] = React.useState<string[]>([]);
-
-  const toolbarSelectHandler = (items: string[]) => {
-    if (items !== selectedText) {
-      //is something not handled here? the pell editor has more logic
-      setSelectedText(items);
-    }
-  };
-
-  useEffect(() => {
-    setSelectionChangeListeners((listeners) => [
-      ...listeners,
-      (items) => toolbarSelectHandler(items),
-    ]);
-
-    return setSelectionChangeListeners([]);
-  }, []);
-
-  const renderOption = (item: any) => {
+  const renderOption = (item: RichToolbarOption) => {
+    let selected = selectedOptions.includes(item.action.type);
     return (
       <Pressable
-        style={{ padding: 10 }}
+        style={[{ padding: 10 }, selected ? { backgroundColor: "blue" } : {}]}
         onPress={() => sendAction(item.action)}
       >
         {item.icon()}

@@ -20,10 +20,8 @@ export interface IMessengerAction {
 export type ISendAction = (action: IMessengerAction) => void;
 export interface IRichToolbar {
   options: RichToolbarOption[];
+  selectedOptions: string[];
   sendAction: SendAction;
-  setSelectionChangeListeners: React.Dispatch<
-    React.SetStateAction<SelectionChangeListener[]>
-  >;
 }
 export interface RichToolbarOption {
   icon: () => JSX.Element;
