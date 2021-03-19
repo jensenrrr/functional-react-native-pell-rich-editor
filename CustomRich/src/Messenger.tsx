@@ -32,15 +32,7 @@ const intializeToolbarOptions = () => {
   return results;
 };
 
-const Messenger: React.FC<IMessenger> = ({
-  focus,
-  setFocus,
-  placeholder,
-  onChange,
-  onPaste,
-  onKeyDown,
-  onKeyUp,
-}) => {
+const Messenger: React.FC<IMessenger> = (messengerProps) => {
   const html = createHTML({ color: "black" });
   const webView = React.useRef<WebView>(null);
   const [height, setHeight] = React.useState(50);
@@ -57,11 +49,11 @@ const Messenger: React.FC<IMessenger> = ({
   >(intializeToolbarOptions());
 
   const init = () => {
-    if (placeholder) {
+    if (messengerProps.placeholder) {
       sendAction({
         type: actions.content,
         name: "setPlaceholder",
-        data: placeholder,
+        data: messengerProps.placeholder,
       });
     }
   };
@@ -76,9 +68,6 @@ const Messenger: React.FC<IMessenger> = ({
         console.log("FROM EDIT:", ...message.data);
         break;
       case messages.SELECTION_CHANGE: {
-        const items = message.data;
-        //console.log("selection items:", JSON.stringify(items));
-        //console.log("listeners: ", JSON.stringify(selectionChangeListeners));
         setSelectedOptions(message.data);
         break;
       }
@@ -91,23 +80,22 @@ const Messenger: React.FC<IMessenger> = ({
         break;
       }
       case messages.CONTENT_CHANGE: {
-        onChange && onChange(message.data);
+        messengerProps.onChange && messengerProps.onChange(message.data);
         break;
       }
       case messages.CONTENT_PASTED: {
-        onPaste && onPaste(message.data);
+        messengerProps.onPaste && messengerProps.onPaste(message.data);
         break;
       }
       case messages.CONTENT_KEYUP: {
-        onKeyUp && onKeyUp(message.data);
+        messengerProps.onKeyUp && messengerProps.onKeyUp(message.data);
         break;
       }
       case messages.CONTENT_KEYDOWN: {
-        onKeyDown && onKeyDown(message.data);
+        messengerProps.onKeyDown && messengerProps.onKeyDown(message.data);
         break;
       }
       case messages.OFFSET_HEIGHT:
-        console.log(message.data);
         setHeight(Math.min(220, message.data));
         break;
       default:
@@ -118,15 +106,15 @@ const Messenger: React.FC<IMessenger> = ({
 
   const blurEditor = () => {
     sendAction({ type: actions.content, name: "blur" });
-    setFocus(false);
+    messengerProps.setFocus(false);
   };
   const focusEditor = () => {
     sendAction({ type: actions.content, name: "focus" });
-    setFocus(true);
+    messengerProps.setFocus(true);
   };
 
   useEffect(() => {
-    if (focus) focusEditor();
+    if (messengerProps.focus) focusEditor();
     else blurEditor();
   }, [focus]);
 
@@ -146,10 +134,9 @@ const Messenger: React.FC<IMessenger> = ({
           onMessage={onMessage}
           source={{ html }}
           onLoad={init}
-          //android -> overscroll mode?
         />
       </View>
-      {focus ? (
+      {messengerProps.focus ? (
         <RichToolbar
           options={toolbarOptions}
           selectedOptions={selectedOptions}

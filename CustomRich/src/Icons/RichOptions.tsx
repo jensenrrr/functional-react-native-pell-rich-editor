@@ -27,6 +27,4 @@ const UnderlineIcon = (selected: boolean) => (
   </Svg>
 );
 
-const RichOptions = [BoldIcon, ItalicIcon, UnderlineIcon];
-export default RichOptions;
 export { BoldIcon, ItalicIcon, UnderlineIcon };

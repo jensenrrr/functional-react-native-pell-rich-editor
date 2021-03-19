@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Button, FlatList, Pressable } from "react-native";
-import { actions } from "./const";
-import RichOptions from "./Icons/RichOptions";
+import React from "react";
+import { Pressable, FlatList } from "react-native";
 import { IRichToolbar, RichToolbarOption } from "./IContainer";
 
 const RichToolbar: React.FC<IRichToolbar> = ({
@@ -25,7 +23,9 @@ const RichToolbar: React.FC<IRichToolbar> = ({
     <FlatList
       horizontal
       keyboardShouldPersistTaps={"always"}
-      keyExtractor={(item: any, index: number) => index.toString()}
+      keyExtractor={(item: any, index: number) =>
+        item.action.type + index.toString()
+      }
       data={options}
       alwaysBounceHorizontal={false}
       showsHorizontalScrollIndicator={false}
@@ -33,19 +33,8 @@ const RichToolbar: React.FC<IRichToolbar> = ({
       style={{
         backgroundColor: "#C7C7C7",
       }}
-      //contentContainerStyle={flatContainerStyle}
     />
   );
 };
 
-/*
-        <Button
-          onPress={() => sendAction(actions.setBold, "result")}
-          title="Bold"
-        />
-        <Button
-          onPress={() => sendAction(actions.setItalic, "result")}
-          title="Italic"
-        />
-*/
 export default RichToolbar;
