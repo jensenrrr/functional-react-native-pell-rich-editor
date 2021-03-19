@@ -8,11 +8,20 @@ const RichToolbar: React.FC<IRichToolbar> = ({
   selectedOptions,
 }) => {
   const renderOption = (item: RichToolbarOption) => {
-    let selected = selectedOptions.includes(item.action.type);
+    let selected = item.action
+      ? selectedOptions.includes(item.action.type)
+      : false;
+    const onPress = () => {
+      if (item.action) sendAction(item.action);
+      if (item.callback) {
+        item.callback(options.props);
+      }
+    };
+
     return (
       <Pressable
         style={[{ padding: 10 }, selected ? { backgroundColor: "blue" } : {}]}
-        onPress={() => sendAction(item.action)}
+        onPress={onPress}
       >
         {item.icon(selected)}
       </Pressable>
@@ -24,9 +33,9 @@ const RichToolbar: React.FC<IRichToolbar> = ({
       horizontal
       keyboardShouldPersistTaps={"always"}
       keyExtractor={(item: any, index: number) =>
-        item.action.type + index.toString()
+        (item.action ? item.action.type : "") + index.toString()
       }
-      data={options}
+      data={options.options}
       alwaysBounceHorizontal={false}
       showsHorizontalScrollIndicator={false}
       renderItem={({ item }) => renderOption(item)}

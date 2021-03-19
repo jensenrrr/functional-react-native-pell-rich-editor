@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { Path, Circle } from "react-native-svg";
 
-const BoldIcon = (selected: boolean) => (
+const BoldIcon = (selected?: boolean) => (
   <Svg width="19" height="24" fill="none" viewBox="0 0 19 24">
     <Path
       fill={selected ? "#75EAE4" : "#000"}
@@ -10,7 +10,7 @@ const BoldIcon = (selected: boolean) => (
   </Svg>
 );
 
-const ItalicIcon = (selected: boolean) => (
+const ItalicIcon = (selected?: boolean) => (
   <Svg width="17" height="24" viewBox="0 0 17 24" fill="none">
     <Path
       d="M6.10955 0L5.75018 1.45H8.2658C8.85877 1.45 9.21923 1.92361 9.05751 2.50361L4.23955 20.6966C4.07783 21.2766 3.46797 21.7502 2.875 21.7502H0.359375L0 23.2002H10.4219L10.7812 21.7502H7.90625C7.31328 21.7502 6.95283 21.2768 7.11455 20.6966L11.9325 2.50361C12.0942 1.92361 12.7041 1.45 13.2971 1.45H15.8127L16.1721 0H6.10955V0Z"
@@ -18,7 +18,7 @@ const ItalicIcon = (selected: boolean) => (
     />
   </Svg>
 );
-const UnderlineIcon = (selected: boolean) => (
+const UnderlineIcon = (selected?: boolean) => (
   <Svg width="18" height="25" fill="none" viewBox="0 0 18 25">
     <Path
       fill={selected ? "#75EAE4" : "#000"}

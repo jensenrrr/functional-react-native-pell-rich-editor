@@ -13,24 +13,7 @@ import {
 import { createHTML } from "./editor";
 import RichToolbar from "./RichToolbar";
 import { BoldIcon, ItalicIcon, UnderlineIcon } from "./Icons/RichOptions";
-
-const intializeToolbarOptions = () => {
-  const results: RichToolbarOption[] = [
-    {
-      icon: BoldIcon,
-      action: { type: actions.setBold, name: "result" },
-    },
-    {
-      icon: ItalicIcon,
-      action: { type: actions.setItalic, name: "result" },
-    },
-    {
-      icon: UnderlineIcon,
-      action: { type: actions.setUnderline, name: "result" },
-    },
-  ];
-  return results;
-};
+import { SendIcon } from "./Icons/MessagingOptions";
 
 const Messenger: React.FC<IMessenger> = (messengerProps) => {
   const html = createHTML({ color: "black" });
@@ -44,9 +27,40 @@ const Messenger: React.FC<IMessenger> = (messengerProps) => {
     }
   };
 
-  const [toolbarOptions, setToolbarOptions] = React.useState<
-    RichToolbarOption[]
-  >(intializeToolbarOptions());
+  const intializeToolbarOptions = () => {
+    const results: RichToolbarOption[] = [
+      {
+        icon: BoldIcon,
+        action: { type: actions.setBold, name: "result" },
+      },
+      {
+        icon: ItalicIcon,
+        action: { type: actions.setItalic, name: "result" },
+      },
+      {
+        icon: UnderlineIcon,
+        action: { type: actions.setUnderline, name: "result" },
+      },
+      {
+        icon: SendIcon,
+        callback: messengerProps.sendMessage,
+      },
+    ];
+    return { options: results, props: { message: "" } };
+  };
+  const [toolbarOptions, setToolbarOptions] = React.useState<{
+    options: RichToolbarOption[];
+    props: any;
+  }>(intializeToolbarOptions());
+
+  useEffect(() => {
+    setToolbarOptions((toolbarOptions) => {
+      return {
+        options: [...toolbarOptions.options],
+        props: { message: messengerProps.messageContent },
+      };
+    });
+  }, [messengerProps.messageContent]);
 
   const init = () => {
     if (messengerProps.placeholder) {
@@ -116,7 +130,7 @@ const Messenger: React.FC<IMessenger> = (messengerProps) => {
   useEffect(() => {
     if (messengerProps.focus) focusEditor();
     else blurEditor();
-  }, [focus]);
+  }, [messengerProps.focus]);
 
   return (
     <>

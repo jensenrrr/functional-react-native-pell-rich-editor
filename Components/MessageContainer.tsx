@@ -12,8 +12,7 @@ import Messenger from "../CustomRich/src/Messenger";
 const MessageContainer = () => {
   const [focus, setFocus] = useState(false);
   const [messageContent, setMessageContent] = useState<string>("");
-  const sendMessage = () =>
-    console.log("send message not implemented", messageContent);
+  const sendMessage = (props: any) => console.log(`send : ${props.message}`);
 
   return (
     <KeyboardAvoidingView
@@ -44,6 +43,7 @@ const MessageContainer = () => {
           focus={focus}
           onChange={(msg: string) => setMessageContent(msg)}
           sendMessage={sendMessage}
+          messageContent={messageContent}
           setFocus={setFocus}
           placeholder={"custom testing..."}
         />

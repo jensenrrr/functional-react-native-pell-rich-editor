@@ -19,19 +19,25 @@ export interface IMessengerAction {
 
 export type ISendAction = (action: IMessengerAction) => void;
 
-export interface IRichToolbar {
+export interface RichToolbarOptions {
   options: RichToolbarOption[];
+  props: any;
+}
+export interface IRichToolbar {
+  options: RichToolbarOptions;
   selectedOptions: string[];
   sendAction: SendAction;
 }
 export interface RichToolbarOption {
-  icon: (selected: boolean) => JSX.Element;
-  action: IMessengerAction;
+  icon: (selected?: boolean) => JSX.Element;
+  action?: IMessengerAction;
+  callback?: any;
 }
 export interface IMessenger {
   focus: boolean;
   setFocus: React.Dispatch<React.SetStateAction<boolean>>;
-  sendMessage?: () => void;
+  messageContent?: string;
+  sendMessage?: (message: string) => void;
   /**
    * Used for placement of editor
    */
