@@ -6,13 +6,19 @@ import {
   Pressable,
   View,
   StyleSheet,
+  useWindowDimensions,
 } from "react-native";
+import HTML from "react-native-render-html";
 import Messenger from "../CustomRich/src/Messenger";
 
 const MessageContainer = () => {
   const [focus, setFocus] = useState(false);
   const [messageContent, setMessageContent] = useState<string>("");
-  const sendMessage = (props: any) => console.log(`send : ${props.message}`);
+  const [sentMessages, setSentMessages] = useState<string[]>([]);
+  const contentWidth = useWindowDimensions().width;
+
+  const sendMessage = (props: any) =>
+    setSentMessages((sentMessages) => [...sentMessages, props.message]);
 
   return (
     <KeyboardAvoidingView
@@ -24,12 +30,13 @@ const MessageContainer = () => {
           flexGrow: 1,
           backgroundColor: "#FFF0FD",
         }}
-        onPress={() => {
-          setFocus(false);
-        }}
+        onPress={() => setFocus(false)}
       >
         <View style={{ marginTop: 200 }}>
-          <Text style={{ textAlign: "center" }}>Rich Text Editor!</Text>
+          <Text style={{ textAlign: "center" }}>Messages</Text>
+          {sentMessages.map((message) => (
+            <HTML source={{ html: message }} contentWidth={contentWidth}></HTML>
+          ))}
         </View>
       </Pressable>
       <View
